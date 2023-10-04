@@ -57,10 +57,17 @@ if __name__ == "__main__":
 
         kuntoS=kunto(cleaned_linkki_str)
 
+        product_page = requests.get(cleaned_linkki_str)
+        product_soup = BeautifulSoup(product_page.content, 'html.parser')
+
+        image_elem = product_soup.find('div', class_='single_image')
+        image_url = image_elem.find('img')['src'] if image_elem else None
+
         item_data = {
                 "Nimi": nimi_str,
                 "Hinta": hinta_str,
-                "Kunto": kuntoS
+                "Kunto": kuntoS,
+                "Kuva": image_url
             }
 
         data_list.append(item_data)
@@ -68,5 +75,4 @@ if __name__ == "__main__":
        
 
     print(data_list)
-
 
