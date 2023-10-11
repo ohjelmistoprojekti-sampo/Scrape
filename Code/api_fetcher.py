@@ -11,8 +11,8 @@ def make_api_request(endpoint, params=None, timeout=5):
         print(f"Error making API request: {exception}")
         return None
 
-def fetch_by_keyword(keyword, timeout=5):
-    params = {"words": keyword}
+def fetch_by_keyword(keyword, limit=500, timeout=5):
+    params = {"words": keyword, "limit": limit}
     data = make_api_request("items", params=params, timeout=timeout)
     if data:
         items = data.get("items", [])
