@@ -60,8 +60,18 @@ if __name__ == "__main__":
         product_page = requests.get(cleaned_linkki_str)
         product_soup = BeautifulSoup(product_page.content, 'html.parser')
 
-        image_elem = product_soup.find('div', class_='single_image')
-        image_url = image_elem.find('img')['src'] if image_elem else None
+         # Find the div with id 'media' that contains the images
+        media_div = product_soup.find('div', id='media')
+
+        # Check if the media_div exists and if it contains any images
+        if media_div:
+            # Find the first image with itemprop 'image'
+            image_elem = media_div.find('img', itemprop='image', src=True)
+
+            # Extract the 'src' attribute of the image
+            image_url = image_elem['src'] if image_elem else None
+        else:
+            image_url = None
 
         item_data = {
                 "Nimi": nimi_str,
