@@ -44,5 +44,3 @@ def clean_data(data):
 
 item_data = fetch_by_keyword("aaltomaljakko")
 furniture_data = fetch_items_by_cat_id(339)
-
-print(furniture_data)
