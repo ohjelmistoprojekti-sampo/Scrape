@@ -41,6 +41,3 @@ def clean_data(data):
             clean_item["image"] = item["images"][0].get("links", {}).get("medium", "")
         items_clean.append(clean_item)
     return items_clean
-
-item_data = fetch_by_keyword("aaltomaljakko")
-furniture_data = fetch_items_by_cat_id(339)
