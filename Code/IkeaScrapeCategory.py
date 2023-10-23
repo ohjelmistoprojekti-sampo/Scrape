@@ -6,18 +6,17 @@ class IkeaScrape(unittest.TestCase):
 
     def setUp(self):
         self.driver = webdriver.Chrome()
-        search_term = input("Product name: ")
-        self.driver.get(f"https://www.ikea.com/fi/fi/cat/tuolit-fu002/")
+        self.driver.get("https://www.ikea.com/fi/fi/cat/tuolit-fu002/")
 
     def test_scrape_ikea(self):
         driver = self.driver
         
         # Locate all elements with the specified class names
-        name_parts_1 = driver.find_elements(By.CLASS_NAME, "plp-price-module__product-name")
-        name_parts_2 = driver.find_elements(By.CLASS_NAME, "plp-price-module__description")
+        name_parts_1 = driver.find_elements(By.CLASS_NAME, "pip-header-section__title--small.notranslate")
+        name_parts_2 = driver.find_elements(By.CLASS_NAME, "pip-header-section__description-text")
         
         # Locate the div elements with the specified class containing price data
-        price_elements = driver.find_elements(By.CSS_SELECTOR, 'div.plp-mastercard[data-price]')
+        price_elements = driver.find_elements(By.CLASS_NAME, "pip-temp-price__sr-text")
         
         # Create an empty list to store the scraped data
         scraped_data = []
@@ -26,7 +25,7 @@ class IkeaScrape(unittest.TestCase):
         for i in range(len(name_parts_1)):
             product_name = name_parts_1[i].text
             product_description = name_parts_2[i].text
-            price = price_elements[i].get_attribute("data-price")
+            price = price_elements[i].text
             
             # Create a dictionary for each item
             item_data = {"Nimi": product_name + " " + product_description, 
