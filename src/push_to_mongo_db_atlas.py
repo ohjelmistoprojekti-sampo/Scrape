@@ -1,6 +1,9 @@
 from pymongo import MongoClient
+from dotenv import load_dotenv
+import os
 
-connection = "mongodb+srv://admin:password@sampodb.mq9vg8p.mongodb.net/" # define password
+load_dotenv()
+connection = os.getenv('DB_URL')
 
 client = MongoClient(connection)
 
