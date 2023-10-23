@@ -1,6 +1,6 @@
 from pymongo import MongoClient
 
-connection = "mongodb+srv://admin:qFO3WyPgMyrEIP2g@sampodb.mq9vg8p.mongodb.net/" # define password
+connection = "mongodb+srv://admin:password@sampodb.mq9vg8p.mongodb.net/" # define password
 
 client = MongoClient(connection)
 
