@@ -47,6 +47,8 @@ if __name__ == "__main__":
     href_match = re.findall(r'href="([^"]+)"', str(linkki))
 
     data_list = []
+    total_price = 0  # Initialize the total price to 0
+
 
     for hinta_elem, nimi_elem, linkki_elem in zip(hinta, nimi, href_match):
         hinta_str = hinta_elem.get_text().replace(" ", "").replace("\n", "")
@@ -56,6 +58,9 @@ if __name__ == "__main__":
        
 
         kuntoS=kunto(cleaned_linkki_str)
+        
+         # Convert hinta to an integer for calculating the average
+       
 
         product_page = requests.get(cleaned_linkki_str)
         product_soup = BeautifulSoup(product_page.content, 'html.parser')
@@ -81,8 +86,13 @@ if __name__ == "__main__":
             }
 
         data_list.append(item_data)
+    
+    print(data_list)
+        
+           # Calculate the average price
+  
 
        
 
-    print(data_list)
+    
 
