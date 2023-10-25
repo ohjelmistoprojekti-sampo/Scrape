@@ -7,7 +7,7 @@ class IkeaScrape(unittest.TestCase):
     def setUp(self):
         self.driver = webdriver.Chrome()
         search_term = input("Product name: ")
-        self.driver.get(f"https://www.ikea.com/fi/fi/cat/tuolit-fu002/")
+        self.driver.get(f"https://www.ikea.com/fi/fi/search/?q={search_term}")
 
     def test_scrape_ikea(self):
         driver = self.driver
@@ -31,6 +31,7 @@ class IkeaScrape(unittest.TestCase):
             # Create a dictionary for each item
             item_data = {"Nimi": product_name + " " + product_description, 
                          "Hinta": price}
+
             scraped_data.append(item_data)
 
         # Print the list of extracted data
