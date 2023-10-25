@@ -1,0 +1,19 @@
+from pymongo import MongoClient
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+connection = os.getenv('DB_URL')
+
+client = MongoClient(connection)
+
+db = client.sampoDB
+
+collection = db.item_data
+
+def push_many_to_mongo_db(items_array):
+    collection.insert_many(items_array)
+
+
+def push_one_to_mongo_db(item):
+    collection.insert_one(item)
