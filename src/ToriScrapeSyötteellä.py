@@ -1,98 +1,65 @@
-import requests
-from bs4 import BeautifulSoup
-import re
+import unittest
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 
 
-def kunto(linkki):
-    url = linkki
+def setUp():
+    driver = webdriver.Chrome()
+    driver.get('https://www.tori.fi/koko_suomi?q=tuoli&cg=0&w=3')
 
-    page = requests.get(url)
-    soup = BeautifulSoup(page.content, 'html.parser')
+def accept_cookie_consent(self):
+        try:
+            # Wait for the cookie consent button to be clickable
+           consent_button = WebDriverWait(self.driver, 10).until(
+                EC.element_to_be_clickable((By.XPATH, "//button[@title='Hyväksy kaikki evästeet' and @class='message-component message-button no-children focusable sp_choice_type_11 last-focusable-el']"))
+            )
+           self.driver.execute_script("arguments[0].click();", consent_button)
+        except:
+            # If the button is not found or not clickable, just proceed
+            pass
 
-    kunto_value = None
+def test_scrape_tori(self):
+        driver = self.driver  
+        self.accept_cookie_consent()
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.CLASS_NAME, "li-title"))
+        )
+        # Locate all elements with the specified class names for product names
+        product_names = driver.find_elements(By.CLASS_NAME, "li-title")
+        
+        # Locate all elements with the specified class names for product prices
+        product_prices = driver.find_elements(By.CLASS_NAME, "list_price.ineuros")
+        
+        # Locate all links to individual product listings
+        product_links = driver.find_elements(By.CSS_SELECTOR, "a[href*='/ilmoitukset/']")
 
-    # Find the "Kunto:" topic and its value in the table
-    topic_elem = soup.find('td', class_='topic', string='Kunto:')
-    if topic_elem:
-        value_elem = topic_elem.find_next('td', class_='value')
-        if value_elem:
-            kunto_value = value_elem.get_text().strip()
+        # Create an empty list to store the scraped data
+        scraped_data = []
 
-    return(kunto_value)
-    
+        # Iterate through the elements and extract the data
+        for name_elem, price_elem, link_elem in zip(product_names, product_prices, product_links):
+            product_name = name_elem.text.strip()
+            product_price = price_elem.text.strip()
+            product_link = link_elem.get_attribute("href")
+            
+            # Create a dictionary for each item
+            item_data = {
+                "Name": product_name,
+                "Price": product_price,
+                "Link": product_link
+            }
+            scraped_data.append(item_data)
+            print(f"Scraped: {item_data}")
+        # Print the list of extracted data
+        for item in scraped_data:
+            print(f"Product Name: {item['Name']}, Price: {item['Price']}, Link: {item['Link']}")
+
+def tearDown(self):
+        self.driver.close()
 
 if __name__ == "__main__":
-    search_term = input("Tuotteen nimi: ")
-
-    # Construct the URL with the user's input
-    url = f'https://www.tori.fi/koko_suomi?q={search_term}&cg=0&w=3'
-    page = requests.get(url)
-
-    # Check if the request was successful
-    if page.status_code == 200:
-        # Parse the HTML content of the page
-        soup = BeautifulSoup(page.content, 'html.parser')
-    else:
-        print(f"Failed to retrieve the page. Status code: {page.status_code}")
-        exit()
-
-    results = soup.find(id="blocket")
-    results2 = soup.find(class_="list_mode_thumb")
-
-    hinta = results.find_all("p", class_="list_price ineuros")
-    nimi = results.find_all("div", class_="li-title")
-    linkki = results2.find_all("a", href=True)  # Find all anchor elements with href attribute
-
-    href_match = re.findall(r'href="([^"]+)"', str(linkki))
-
-    data_list = []
-    total_price = 0  # Initialize the total price to 0
-
-
-    for hinta_elem, nimi_elem, linkki_elem in zip(hinta, nimi, href_match):
-        hinta_str = hinta_elem.get_text().replace(" ", "").replace("\n", "")
-        nimi_str = nimi_elem.get_text().strip()
-        linkki_str = linkki_elem.strip()
-        cleaned_linkki_str = linkki_str.replace('&amp;', '&')
-       
-
-        kuntoS=kunto(cleaned_linkki_str)
-        
-         # Convert hinta to an integer for calculating the average
-       
-
-        product_page = requests.get(cleaned_linkki_str)
-        product_soup = BeautifulSoup(product_page.content, 'html.parser')
-
-         # Find the div with id 'media' that contains the images
-        media_div = product_soup.find('div', id='media')
-
-        # Check if the media_div exists and if it contains any images
-        if media_div:
-            # Find the first image with itemprop 'image'
-            image_elem = media_div.find('img', itemprop='image', src=True)
-
-            # Extract the 'src' attribute of the image
-            image_url = image_elem['src'] if image_elem else None
-        else:
-            image_url = None
-
-        item_data = {
-                "Nimi": nimi_str,
-                "Hinta": hinta_str,
-                "Kunto": kuntoS,
-                "Kuva": image_url
-            }
-
-        data_list.append(item_data)
-    
-    print(data_list)
-        
-           # Calculate the average price
-  
-
-       
-
-    
+   setUp()
 
