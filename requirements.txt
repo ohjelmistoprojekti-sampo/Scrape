@@ -1,0 +1,6 @@
+requests
+beautifulsoup4
+json
+selenium
+pymongo
+python-dotenv
