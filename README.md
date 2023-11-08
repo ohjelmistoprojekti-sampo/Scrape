@@ -2,7 +2,7 @@
 ### Run webscraper
 Clone the project
 
-`git clone https://github.com/ohjelmistoprojekti-sampo/sampo.git`
+`git clone https://github.com/ohjelmistoprojekti-sampo/Scrape`
 
 Install necessary dependecies with pip:
 
