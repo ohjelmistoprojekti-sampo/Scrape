@@ -2,19 +2,11 @@
 ### Run webscraper
 Clone the project
 
-`git clone https://github.com/ohjelmistoprojekti-sampo/sampo.git`
+`git clone https://github.com/ohjelmistoprojekti-sampo/Scrape`
 
 Install necessary dependecies with pip:
 
-`pip install beautifulsoup4`
-
-`pip install requests`
+`pip install requirements.txt`
   
 Run the python script
-  > $ python /scrape/Tuotehaku.py
-
-  > $ python /scrape/Torihaku.py
-
-Type in the product that you want to search.
-
-Review the results
+  > $ python /src/main.py
