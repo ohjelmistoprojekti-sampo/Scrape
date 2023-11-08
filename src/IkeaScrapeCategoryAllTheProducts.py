@@ -52,6 +52,9 @@ def scrape_ikea():
             EC.presence_of_all_elements_located((By.CLASS_NAME, "pip-temp-price__sr-text"))
         )
 
+        # Locate all the elements under the specified class containing the image link
+        image_elements = driver.find_elements(By.CSS_SELECTOR, ".pip-product-compact__main-box--main .pip-image")
+
         # Create an empty list to store the scraped data
         scraped_data = []
 
@@ -61,13 +64,21 @@ def scrape_ikea():
             product_description = name_parts_2[i].text
             price = price_elements[i].text.replace("Hinta", "").strip()
 
+            # Extract the first image source (URL) for the current product
+            if i < len(image_elements):
+                image_src = image_elements[i].get_attribute("src")
+            else:
+                image_src = "N/A"  # or some default value
+             
             # Create a dictionary for each item
-            item_data = {"Nimi": product_name + " " + product_description, "Hinta": price}
+            item_data = {"Nimi": product_name + " " + product_description,
+                         "Hinta": price,
+                         "Kuva": image_src}
             scraped_data.append(item_data)
 
         # Print the list of extracted data
         for item in scraped_data:
-            print(f"Product Name: {item['Nimi']}, {item['Hinta']}")
+            print(f"Product Name: {item['Nimi']}, {item['Hinta']}, {item['Kuva']}")
 
     print(scraped_data)
     print("Scraping completed.")
