@@ -7,15 +7,15 @@ from selenium.common.exceptions import TimeoutException
 import requests
 
 # get numeric value for each condition
-def translate_condition_to_number(kunto):
-    kunto_mapping = {
+def translate_condition_to_number(condition):
+    condition_mapping = {
         "Uusi": 5,
         "Erinomainen": 4,
         "Hyvä": 3,
         "Tyydyttävä": 2,
         "Huono": 1
     }
-    return kunto_mapping.get(kunto, 0) 
+    return condition_mapping.get(condition, 0) 
 
 def cond(link):
     url = link
@@ -85,7 +85,7 @@ def ScrapeTori(num_pages=1):  # Set the number of pages you want to scrape
                 scraped_data.append(item_data)
 
                 #follow the process
-                print(f"Page {page_number}, Item {i} - Product Name: {item_data['title']}, Price: {item_data['price']}, Image Link: {item_data['imageurl']}, Condition: {item_data['condition']}")
+                print(f"Page {page_number}, Item {i} - title: {item_data['title']}, price: {item_data['price']}, imageurl: {item_data['imageurl']}, condition: {item_data['condition']}")
 
             except Exception as e:
                 print(f"Error processing item {i} on page {page_number}: {e}")
@@ -96,5 +96,5 @@ def ScrapeTori(num_pages=1):  # Set the number of pages you want to scrape
     return scraped_data
 
 # Call the function to execute the scraping and display JSON
-scraped_data = ScrapeTori(num_pages=10)  # You can adjust the number of pages as needed
+scraped_data = ScrapeTori(num_pages=1)  # You can adjust the number of pages as needed
 print(scraped_data)
