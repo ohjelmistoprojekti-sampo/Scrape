@@ -4,6 +4,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 
+
 def accept_cookie_consent(driver):
     try:
         # Wait for the cookie consent button to be clickable
@@ -58,31 +59,38 @@ def scrape_ikea():
         # Create an empty list to store the scraped data
         scraped_data = []
 
-        # Iterate through the elements and extract the data
-        for i in range(len(name_parts_1)):
-            product_name = name_parts_1[i].text
-            product_description = name_parts_2[i].text
-            price = price_elements[i].text.replace("Hinta", "").strip()
+         # Iterate through the elements and extract the data
+        for item in product_items:
+            product_name = item.find_element(By.CLASS_NAME, "pip-header-section__title--small.notranslate").text
+            product_description = item.find_element(By.CLASS_NAME, "pip-header-section__description-text").text
+            price_str = item.find_element(By.CLASS_NAME, "pip-temp-price__sr-text").text.replace("Hinta", "").strip()
+        
+             # Convert "Hinta" to an integer
+            price = int(price_str.replace(' ', ''))  # Assuming the price contains spaces
 
             # Extract the first image source (URL) for the current product
-            if i < len(image_elements):
-                image_src = image_elements[i].get_attribute("src")
-            else:
-                image_src = "N/A"  # or some default value
-             
+            image_element = item.find_element(By.CSS_SELECTOR, ".pip-product-compact__main-box--main .pip-image")
+            image_src = image_element.get_attribute("src")
+
+            # Convert "Kunto" to an integer (assuming it's a numerical value)
+            kunto = 5  # Replace with the actual value if available as an integer
+
             # Create a dictionary for each item
             item_data = {"Nimi": product_name + " " + product_description,
-                         "Hinta": price,
-                         "Kuva": image_src}
+                        "Hinta": price,
+                        "Kunto": kunto,
+                        "Kuva": image_src}
             scraped_data.append(item_data)
 
         # Print the list of extracted data
         for item in scraped_data:
             print(f"Product Name: {item['Nimi']}, {item['Hinta']}, {item['Kuva']}")
-
-    print(scraped_data)
-    print("Scraping completed.")
     driver.close()
+    print(scraped_data)
+    
+    print("Scraping completed.")
+    return(scraped_data)
 
 if __name__ == "__main__":
     scrape_ikea()
+    
