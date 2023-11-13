@@ -9,4 +9,4 @@ Install necessary dependecies with pip:
 `pip install requirements.txt`
   
 Run the python script
-  > $ python /src/main.py
+  > $ python3 src/main.py
