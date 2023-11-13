@@ -8,6 +8,16 @@ import json
 import requests
 from urllib.parse import quote
 
+def translate_condition_to_number(kunto):
+    kunto_mapping = {
+        "Uusi": 5,
+        "Erinomainen": 4,
+        "Hyvä": 3,
+        "Tyydyttävä": 2,
+        "Huono": 1
+    }
+    return kunto_mapping.get(kunto, 0) 
+
 def kunto(linkki):
     url = linkki
 
@@ -26,7 +36,7 @@ def kunto(linkki):
     return(kunto_value)
     
 
-def ScrapeTori(num_pages=5):  # Set the number of pages you want to scrape
+def ScrapeTori(num_pages=1):  # Set the number of pages you want to scrape
     # Set up Chrome driver
     driver = webdriver.Chrome()
 
@@ -36,7 +46,7 @@ def ScrapeTori(num_pages=5):  # Set the number of pages you want to scrape
         URL = f"https://www.tori.fi/koko_suomi/sisustus_ja_huonekalut/sohvat_ja_nojatuolit?ca=18&q=sisustus%20ja%20huonekalut&cg=3020&st=s&c=3025&w=3&o={page_number}"
         driver.get(URL)
         print(URL)
-        
+
         try:
             WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.CLASS_NAME, 'item_row_flex')))
         except TimeoutException:
@@ -64,13 +74,14 @@ def ScrapeTori(num_pages=5):  # Set the number of pages you want to scrape
 
                 # Get the product condition
                 condition = kunto(tuote_linkki)
+                condition_numbert = translate_condition_to_number(condition)
 
                 # Create a dictionary for each item
                 item_data = {
                     "Product Name": f"{title} ({id})",
                     "Price": price,
                     "Image Link": kuva_linkki,
-                    "Condition": condition
+                    "Condition": condition_numbert
                 }
                 scraped_data.append(item_data)
 
@@ -85,7 +96,7 @@ def ScrapeTori(num_pages=5):  # Set the number of pages you want to scrape
     return scraped_data
 
 # Call the function to execute the scraping and display JSON
-scraped_data = ScrapeTori(num_pages=5)  # You can adjust the number of pages as needed
+scraped_data = ScrapeTori(num_pages=1)  # You can adjust the number of pages as needed
 
 # Optionally, you can convert the scraped data to JSON
 
