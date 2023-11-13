@@ -11,8 +11,9 @@ db = client.sampoDB
 
 collection = db.item_data
 
-# Create a unique index on the 'Kuva' field
-collection.create_index([('Kuva', 1)], unique=True)
+# Create a unique index on the 'imageurl' field
+collection.create_index([('imageurl', 1)], unique=True, partialFilterExpression={'imageurl': {'$exists': True}})
+
 
 def push_many_to_mongo_db(items_array):
     try:

@@ -44,14 +44,14 @@ def scrape_huuto(base_url):
         kunto_number = translate_condition_to_number(kunto_str)
 
         # Check if the image URL is already in the list
-        if not any(item['Kuva'] == image_url for item in data_list):
+        if not any(item['imageurl'] == image_url for item in data_list):
             # Create a dictionary for each item
             item_data = {
-                "Nimi": nimi_str,
-                "Hinta": hinta_float,
-                "Kunto": kunto_number,
-                "Kuva": image_url
-            }
+                    "title": nimi_str,
+                    "price": hinta_float,
+                    "condition": kunto_number,
+                    'imageurl': image_url
+                }
 
             # Append the dictionary to the list
             data_list.append(item_data)
@@ -85,22 +85,23 @@ def scrape_huuto(base_url):
             image_url = image_elem['src']
 
             # Check if the image URL is already in the list
-            if not any(item['Kuva'] == image_url for item in data_list):
+            if not any(item['imageurl'] == image_url for item in data_list):
                 # Update hinta_float and kunto_number for subsequent pages
                 hinta_float = extract_numeric_value(hinta_str)
                 kunto_number = translate_condition_to_number(kunto_str)
 
                 # Create a dictionary for each item
                 item_data = {
-                    "Nimi": nimi_str,
-                    "Hinta": hinta_float,
-                    "Kunto": kunto_number,
-                    "Kuva": image_url
+                    "title": nimi_str,
+                    "price": hinta_float,
+                    "condition": kunto_number,
+                    'imageurl': image_url
                 }
 
                 # Append the dictionary to the list
                 data_list.append(item_data)
-
+                
+    print(len(data_list))
     return data_list
 
 if __name__ == "__main__":
