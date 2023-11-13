@@ -8,15 +8,6 @@ import json
 import requests
 from urllib.parse import quote
 
-def accept_cookie_consent(driver):
-    try:
-        consent_button = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.ID, "onetrust-accept-btn-handler"))
-        )
-        driver.execute_script("arguments[0].click();", consent_button)
-    except:
-        pass
-
 def kunto(linkki):
     url = linkki
 
@@ -45,10 +36,7 @@ def ScrapeTori(num_pages=5):  # Set the number of pages you want to scrape
         URL = f"https://www.tori.fi/koko_suomi/sisustus_ja_huonekalut/sohvat_ja_nojatuolit?ca=18&q=sisustus%20ja%20huonekalut&cg=3020&st=s&c=3025&w=3&o={page_number}"
         driver.get(URL)
         print(URL)
-
-        # Handle cookie consent
-        accept_cookie_consent(driver)
-
+        
         try:
             WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.CLASS_NAME, 'item_row_flex')))
         except TimeoutException:
