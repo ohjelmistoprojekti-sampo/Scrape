@@ -3,6 +3,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
+import re
+
 
 
 def accept_cookie_consent(driver):
@@ -40,6 +42,9 @@ def scrape_ikea():
             # If the button is not found, break out of the loop
             break
 
+        product_list_div = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.CLASS_NAME, "plp-catalog-product-list"))
+        )
         # Locate all elements with the specified class names
         name_parts_1 = WebDriverWait(driver, 10).until(
             EC.presence_of_all_elements_located((By.CLASS_NAME, "pip-header-section__title--small.notranslate"))
@@ -59,38 +64,39 @@ def scrape_ikea():
         # Create an empty list to store the scraped data
         scraped_data = []
 
-         # Iterate through the elements and extract the data
-        for item in product_items:
-            product_name = item.find_element(By.CLASS_NAME, "pip-header-section__title--small.notranslate").text
-            product_description = item.find_element(By.CLASS_NAME, "pip-header-section__description-text").text
-            price_str = item.find_element(By.CLASS_NAME, "pip-temp-price__sr-text").text.replace("Hinta", "").strip()
-        
-             # Convert "Hinta" to an integer
-            price = int(price_str.replace(' ', ''))  # Assuming the price contains spaces
+        # Iterate through the elements and extract the data
+        for i in range(len(name_parts_1)):
+            product_name = name_parts_1[i].text
+            product_description = name_parts_2[i].text
+            price_match = re.search(r'\d+(\.\d+)?', price_elements[i].text)
+            if price_match:
+                price = price_match.group()
+                price_float = float(price)
+            else:
+             # Handle the case where no numeric part is found
+                price_float = 0.0  # or some default value
 
             # Extract the first image source (URL) for the current product
-            image_element = item.find_element(By.CSS_SELECTOR, ".pip-product-compact__main-box--main .pip-image")
-            image_src = image_element.get_attribute("src")
-
-            # Convert "Kunto" to an integer (assuming it's a numerical value)
-            kunto = 5  # Replace with the actual value if available as an integer
-
+            if i < len(image_elements):
+                image_src = image_elements[i].get_attribute("src")
+            else:
+                image_src = "N/A"  # or some default value
+             
             # Create a dictionary for each item
-            item_data = {"Nimi": product_name + " " + product_description,
-                        "Hinta": price,
-                        "Kunto": kunto,
-                        "Kuva": image_src}
+            item_data = {"title": product_name + " " + product_description,
+                         "price": price_float,
+                         "condition": 5,
+                         "imageurl": image_src}
             scraped_data.append(item_data)
 
         # Print the list of extracted data
-        for item in scraped_data:
-            print(f"Product Name: {item['Nimi']}, {item['Hinta']}, {item['Kuva']}")
+       # for item in scraped_data:
+           # print(f"Product Name: {item['title']}, {item['price']}, {item['imageurl']}")
     driver.close()
-    print(scraped_data)
+    #print(scraped_data)
     
     print("Scraping completed.")
     return(scraped_data)
 
 if __name__ == "__main__":
     scrape_ikea()
-    

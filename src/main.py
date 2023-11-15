@@ -6,7 +6,9 @@ from HuutoNet_Scrape import scrape_huuto
 
 if __name__ == "__main__":
     huuto_base_url = "https://www.huuto.net/haku/category/339"
-    scraped_data = scrape_huuto(huuto_base_url)
+    huuto_data = scrape_huuto(huuto_base_url)
+    ikea_data = scrape_ikea()
     
-    push_many_to_mongo_db(scraped_data)
+    push_many_to_mongo_db(huuto_data)
+    push_many_to_mongo_db(ikea_data)
     
