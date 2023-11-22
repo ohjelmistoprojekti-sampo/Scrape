@@ -35,7 +35,7 @@ def cond(link):
     return(cond_value)
     
 
-def ScrapeTori(num_pages=200):  # Set the number of pages you want to scrape
+def scrapeTori(num_pages=200):  # Set the number of pages you want to scrape
     # Set up Chrome driver
     driver = webdriver.Chrome()
 
@@ -104,4 +104,4 @@ def ScrapeTori(num_pages=200):  # Set the number of pages you want to scrape
     
 
 if __name__ == "__main__":
-    ScrapeTori()
+    scrapeTori()
