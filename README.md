@@ -1,4 +1,5 @@
 # Scrape
+This is a scraper service for `https://github.com/ohjelmistoprojekti-sampo/sampo`
 ### Run webscraper
 Clone the project
 
