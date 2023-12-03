@@ -34,7 +34,7 @@ Clone the project
 
 `git clone https://github.com/ohjelmistoprojekti-sampo/Scrape`
 
-Install necessary dependecies with pip:
+Install necessary dependecies with pip (With Python3 use pip3):
 
 `pip install requirements.txt`
   
