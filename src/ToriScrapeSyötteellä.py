@@ -27,7 +27,7 @@ def cond(link):
 
     return(cond_value)
 
-def ScrapeTori(num_pages=2):
+def ScrapeTori(num_pages=200):
     base_url = 'https://www.tori.fi/koko_suomi/sisustus_ja_huonekalut?ca=18&q=sisustus%20ja%20huonekalut&cg=3020&st=s&w=3&o={}'
 
     scraped_data = []
